@@ -25,49 +25,49 @@ class DatabaseHelper {
         await getDatabasesPath(); // Obtém o caminho do diretório de bancos de dados
     return openDatabase(
       // Abre o banco de dados
-      join(path, 'tasks.db'), // Caminho do banco de dados
+      join(path, 'tarefa.db'), // Caminho do banco de dados
       onCreate: (db, version) {
         // Callback executado quando o banco de dados é criado
         return db.execute(
           // Executa uma operação SQL
-          'CREATE TABLE tasks(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, description TEXT)', // Cria a tabela 'tasks'
+          'CREATE TABLE tarefa(id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, descricao TEXT)', // Cria a tabela 'tasks'
         );
       },
       version: 1, // Versão do banco de dados
     );
   }
 
-  Future<int> insertTask(Task task) async {
+  Future<int> insertTask(Tarefa tarefa) async {
     // Método assíncrono para inserir uma tarefa no banco de dados
     final db = await database; // Obtém o banco de dados
     return await db.insert(
-        'tasks', task.toMap()); // Insere a tarefa na tabela 'tasks'
+        'tarefa', tarefa.toMap()); // Insere a tarefa na tabela 'tasks'
   }
 
-  Future<List<Task>> fetchTasks() async {
+  Future<List<Tarefa>> fetchTasks() async {
     // Método assíncrono para buscar todas as tarefas do banco de dados
     final db = await database; // Obtém o banco de dados
     final List<Map<String, dynamic>> maps =
-        await db.query('tasks'); // Consulta todas as tarefas
+        await db.query('tarefa'); // Consulta todas as tarefas
     return List.generate(maps.length, (i) {
       // Gera uma lista de tarefas a partir dos resultados da consulta
-      return Task.fromMap(maps[i]); // Converte o mapa em um objeto Task
+      return Tarefa.fromMap(maps[i]); // Converte o mapa em um objeto Task
     });
   }
 
-  Future<int> updateTask(Task task) async {
+  Future<int> updateTask(Tarefa tarefa) async {
     // Método assíncrono para atualizar uma tarefa no banco de dados
     final db = await database; // Obtém o banco de dados
     return await db
-        .update('tasks', task.toMap(), // Atualiza a tarefa na tabela 'tasks'
+        .update('tarefa', tarefa.toMap(), // Atualiza a tarefa na tabela 'tasks'
             where: 'id = ?',
-            whereArgs: [task.id]); // Condição para atualização
+            whereArgs: [tarefa.id]); // Condição para atualização
   }
 
   Future<int> deleteTask(int id) async {
     // Método assíncrono para deletar uma tarefa do banco de dados
     final db = await database; // Obtém o banco de dados
-    return await db.delete('tasks',
+    return await db.delete('tarefa',
         where: 'id = ?', whereArgs: [id]); // Deleta a tarefa da tabela 'tasks'
   }
 }
